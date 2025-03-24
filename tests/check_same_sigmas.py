@@ -22,25 +22,25 @@ motypes = ['lo','virtual_w_HOMO','hi']
 r_maxs = ['18.03', '136.47', '199.33']
 ensemble_lbls = ['sAMC-500', 'sAMC-q400', 'sAMC-300']
 structypes=['40x40', 'tempdot6', 'tempdot5']
-for st, rmax in zip(structypes,r_maxs):
+for st, st2, rmax in zip(structypes,ensemble_lbls,r_maxs):
     print(f'\n---------- {st} ----------')
     for mt in motypes:
         try:
-            out1 = np.load(f'/Users/nico/Desktop/simulation_outputs/percolation/sigmas_v_T/sigma_v_T_w_err_{st}_rmax_{rmax}_{mt}.npy').T
+            # out1 = np.load(f'/Users/nico/Desktop/simulation_outputs/percolation/sigmas_v_T/sigma_v_T_w_err_{st}_rmax_{rmax}_{mt}.npy').T
+            out1 = np.load(f'/Users/nico/Desktop/simulation_outputs/percolation/sigmas_v_T/sandbox_run/{st2}/sigma_v_T_w_err_production_{mt}.npy')[0,1:]
         except FileNotFoundError as e:
             out1 = np.load(f'/Users/nico/Desktop/simulation_outputs/percolation/sigmas_v_T/sigma_v_T_w_err_{st}_rmax_{rmax}_sites_gammas_{mt}.npy')
             out1 = out1[out1[:,0]==T][0] # in this case, out1 contains data for multiple temperatures
             # print(out1)
         if st == '40x40':
-            out2 = np.load(f'/Users/nico/Desktop/simulation_outputs/percolation/sigmas_v_T/sigma_v_T_w_err_rerun2_rmax_{rmax}_{mt}.npy').T
+            out2 = np.load(f'/Users/nico/Desktop/simulation_outputs/percolation/sigmas_v_T/sigma_v_T_w_err_rerun2_rmax_{rmax}_{mt}.npy')[0,1:] * conv_factor/(kB*T)
         else:
-            out2 = np.load(f'/Users/nico/Desktop/simulation_outputs/percolation/sigmas_v_T/sigma_v_T_w_err_{st}_rerun_rmax_{rmax}_{mt}.npy').T
-
+            out2 = np.load(f'/Users/nico/Desktop/simulation_outputs/percolation/sigmas_v_T/sigma_v_T_w_err_{st}_rerun_rmax_{rmax}_{mt}.npy')[0,1:] * conv_factor/(kB*T)        
+        
         match = np.all(out1 == out2)
+        print(f'\nOutputs for {mt} match: ', match)
         if not match:
             print('out1: ', out1)
             print('out2: ', out2)
             print('diff: ', np.abs(out1-out2))
 
-
-        print(f'Outputs for {mt} match: ', match)
