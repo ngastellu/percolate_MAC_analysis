@@ -19,7 +19,7 @@ setup_tex(fontsize=25)
 fig, ax = plt.subplots()
 
 for st, lbl, c in zip(ensembles, official_labels, clrs):
-    datadir = f'/users/nico/desktop/simulation_outputs/percolation/{st}/mo_ipr_v_mo_cryst/{motype}'
+    datadir = f'/Users/nico/Desktop/simulation_outputs/percolation/{st}/MO_ipr_v_MO_cryst/{motype}'
     npys = os.listdir(datadir)
     dat = np.load(os.path.join(datadir, npys[0]))
     print(dat.shape)

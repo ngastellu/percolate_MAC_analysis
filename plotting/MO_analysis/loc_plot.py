@@ -25,7 +25,8 @@ for npy in npys:
 
     energies = np.hstack(energies) - eF
 
-    plt_out = ax.scatter(iprs,crysts,c=np.abs(energies),alpha=0.8,s=3.0)
+    # plt_out = ax.scatter(iprs,crysts,c=np.abs(energies),alpha=0.8,s=3.0)
+    plt_out = ax.scatter(iprs,crysts,c=energies,alpha=0.8,s=3.0)
 
 fig.colorbar(plt_out, ax=ax)
 ax.set_xlabel('IPR')

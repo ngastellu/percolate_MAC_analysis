@@ -1,1 +1,1 @@
-../../percolate.py
+/Users/nico/Desktop/scripts/percolate_mac/percolate.py

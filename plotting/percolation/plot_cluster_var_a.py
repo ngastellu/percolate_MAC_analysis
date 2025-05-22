@@ -40,8 +40,9 @@ def check_dists(A, centres, energies, dcrit, T, a0=30):
 
 structype = 'tempdot5'
 nn = 10
-motype = 'virtual_w_HOMO'
+motype = 'virtual_w_HOMO' # !!! should be 'virtual_w_HOMO' or 'hi' !!!
 T = 300
+zoom_fig = True
 
 runtype = 'sites'
 
@@ -78,7 +79,7 @@ rCC = 1.8
 
 posdir = f'/Users/nico/Desktop/scripts/disorder_analysis_MAC/structures/sAMC-{synth_temp}/'
 Mdir = path.join(datadir, f'MOs_ARPACK/{motype}/')
-Sdir = f"/Users/nico/Desktop/simulation_outputs/percolation/site_ket_matrices/{structype}_rmax_{rmax}/"
+Sdir = f"/Users/nico/Desktop/simulation_outputs/percolation/{structype}/var_radii_data/sites_data_rmax_{rmax}_{motype}/sample-{nn}/"
 edir = path.join(datadir, f'eARPACK/{motype}/')
 # percdir = path.join(datadir, f'percolate_output/zero_field/to_local_rmax_{rmax}_psipow2_sites_gammas_{motype}/')
 percdir = path.join(datadir, f'percolate_output/zero_field/rmax_{rmax}_{motype}/')
@@ -91,7 +92,7 @@ if motype == 'virtual':
     Sfile = path.join(Sdir, f'site_kets_psipow2-{nn}.npy')
     efile = path.join(edir, f'eARPACK_bigMAC-{nn}.npy')
 else:   
-    Sfile = path.join(Sdir, f'site_kets_{motype}-{nn}.npy')
+    Sfile = path.join(Sdir, f'site_state_matrix.npy')
     efile = path.join(edir, f'eARPACK_bigMAC-{nn}.npy')
     # efile = path.join(edir, f'eARPACK_{motype}_{structype}-{nn}.npy')
 
@@ -128,17 +129,23 @@ print('dcrit = ', dcrit)
 plt_utils.setup_tex()
 rcParams['font.size'] = 20
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(13,13))
 # plot_cluster_brute_force(c,pos,M,A,show_edges=False,show_densities=True, dotsize=0.9, usetex=True, show=False,rel_center_size=10.0,plt_objs=(fig,ax),centers=centers, inds = c)
 
 
-# plot_cluster_density(c,pos,M, dotsize=0.9, usetex=True, show=False,rel_center_size=10.0,plt_objs=(fig,ax),vmin=0,vmax=0.045)
 
-# Zoom for virtual_w_HOMO
-plot_cluster_density(c,pos,M, dotsize=20.0, usetex=True, show=False,rel_center_size=10.0,plt_objs=(fig,ax),vmin=0,vmax=0.065,xbounds=[200,230],ybounds=[200,230],show_bonds=True)
+figname = f'perc_cluster_edensity_{motype}_{structype}-{nn}'
+if zoom_fig:
+    figname += '_zoom'
+    # Zoom for virtual_w_HOMO
+    if motype == 'virtual_w_HOMO' :
+        plot_cluster_density(c,pos,M, dotsize=20.0, usetex=True, show=False,rel_center_size=10.0,plt_objs=(fig,ax),vmin=0,vmax=0.065,xbounds=[200,230],ybounds=[200,230],show_bonds=True)
+    else:
+    # Zoom for hi
+        plot_cluster_density(c,pos,M, dotsize=20.0, usetex=True, show=False,rel_center_size=10.0,plt_objs=(fig,ax),vmin=0,vmax=0.045,xbounds=[353,373],ybounds=[178,198],show_bonds=True)
 
-# Zoom for hi
-# plot_cluster_density(c,pos,M, dotsize=20.0, usetex=True, show=False,rel_center_size=10.0,plt_objs=(fig,ax),vmin=0,vmax=0.045,xbounds=[353,373],ybounds=[178,198],show_bonds=True)
+else:
+    plot_cluster_density(c,pos,M, dotsize=0.9, usetex=True, show=False,rel_center_size=10.0,plt_objs=(fig,ax),vmin=0,vmax=0.045)
 # ax.set_title(f'MAC sample {nn}, $T = {T}$K')
+plt.savefig(f'/Users/nico/Desktop/figures_worth_saving/{figname}', dpi=400)
 plt.show()
-
